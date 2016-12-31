@@ -35,7 +35,6 @@ class lidar:
     '''
 
     def read_sequential(self):
-        #TODO: read sensors simultaneously
         self.GPIO.output(u1t,True)
         time.sleep(0.00001)
         self.GPIO.output(u1t,False)
