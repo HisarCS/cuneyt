@@ -130,6 +130,31 @@ class lidar:
         GPIO.output(u2t,False)
         return self.last_read
 
+    ''' function read_angle
+        reads the distance in a given direction and the direction opposite
+        returns an array of [sensor at angle, sensor opposite, time read]
+    '''
+    def read_angle(self,angle):
+        #TODO: write angle%180 to actual servo
+        self.servo_position = angle % 180
+
+        '''for some reason pwm 160 -> 0 degrees
+                               600 -> 180 degrees
+        '''
+        self.pwm.setPWM(self.servo, 0, 160 + angle * 3)
+        sensors = self.read_parallel()
+        index = self.servo_position / 2
+        self.environment[index] = (self.servo_position,
+                                   sensors[0],
+                                   sensors[1])
+        self.environment[index + 90] = (self.servo_position + 180,
+                                        sensors[2],
+                                        sensors[3])
+        if angle >= 180:
+            return [sensors[2], sensors[0], sensors[3]]
+        else:
+            return [sensors[0], sensors[2], sensors[1]]
+                                                
     ''' function sweep
         constantly scanse the environment and records the distances from cuneyt
         in all directions, updates the self.environment array with tuples 
@@ -142,13 +167,6 @@ class lidar:
             elif self.servo_position == 180:
                 self.servo_increment = -2
             self.servo_position = self.servo_position + self.servo_increment
-            #TODO: write self.servo_position to the actual servo
-            sensors = self.read_parallel()
-            self.environment[servo_position / 2] = (self.servo_position,
-                                                    sensors[0],
-                                                    sensors[1])
-            self.environment[servo_position / 2 + 90] = (self.servo_position+90,
-                                                         sensors[2],
-                                                         sensors[3])
+            self.read_angle(self.servo_position)
             self.time.sleep(0.5)   
 
