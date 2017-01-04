@@ -17,6 +17,11 @@ class motor_controller:
             m2: front right
             m3: rear right
             m4: rear left
+            !!!
+            Note that the pins are set for GPIO.BCM use
+            a and b pins are raspberry pi pins,
+            e pins are Adafruit_pwm pins
+            !!!
         '''
         self.m1a = 17   
         self.m1b = 4
@@ -34,6 +39,7 @@ class motor_controller:
         self.m4b = 21
         self.m4e = 9
 
+        #set up raspi pins as output
         for i in [m1a,m1b,m2a,m2b,m3a,m3b,m4a,m4b]:
             self.GPIO.setup(i,self.GPIO.OUT);
 
@@ -86,6 +92,9 @@ class motor_controller:
         else:
             raise Exception("Motor Number Out Of Bounds")
 
+    ''' function stop_all:
+        stops all motors, setting both inputs to high and enable to 0
+    '''
     def stop_all(self)
         for i in [m1e,m2e,m3e,m4e]:
             self.pwm.setPWM(i, 0, 0)
