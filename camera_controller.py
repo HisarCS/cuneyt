@@ -7,19 +7,25 @@ class camera_controller:
         all functions return True if no exceptions occured, False if they
         could not run to completion
     '''
-    def __init__(self, pwm, flip):
+    def __init__(self, pwm, flip, logger):
         #initialize the raspberry pi camera module
         self.camera = picamera.PiCamera()
         camera.resolution = (1024, 768)
             
         #update this
         self.servo_pin = 0
+        
         #add pwm controller as a field
         self.pwm = pwm
+        
+        #add error logger as a field
+        self.logger = logger
+
         #set recording to false
         self.recording = False
         #set previewing to false
         self.previewing = False
+ 
         #flip the camera vertically, if flip = True
         self.camera.vflip = flip
 
@@ -36,13 +42,12 @@ class camera_controller:
         returns a boolean, True if capture was successful, false if not
         handles errors internally
     '''
-    #TODO: create error log instead of prints
     def take_picture(self, name):
         try:
             self.camera.capture('./captures' + name)
             return True
         except PiCameraError as err:
-            print ("Camera error: " + err)
+            self.logger.error("Camera error: " + err)
             return False
 
     ''' function take_picture_at:
@@ -59,7 +64,8 @@ class camera_controller:
     '''
     def start_video_recording(self, name):
         if self.recording:
-            print ("Tried to start an existing process: video recording")
+            self.logger.warning("tried to start an existing process: "+
+                                "video recording")
             return False
         else:
             try:
@@ -67,7 +73,7 @@ class camera_controller:
                 self.recording = True
                 return True
             except PiCameraError as err:
-                print("Camera error: " + err)
+                self.logger.error("Camera error: " + err)
                 return False
 
     ''' function stop_video_recording:
@@ -76,14 +82,15 @@ class camera_controller:
     '''
     def stop_video_recording(self):
         if (not self.recording):
-            print ("Tried to stop a non-existent process: video recording")
+            self.logger.warning("Tried to stop a non-existent process: "+
+                                "video recording")
             return False
         else:
             try: 
                 self.camera.stop_recording()
                 return True
             except PiCameraError as err:
-                print ("Camera error: " + err)
+                self.logger.error("Camera error: " + err)
                 return False
 
     ''' function start_camera_preview:
@@ -92,7 +99,8 @@ class camera_controller:
     '''
     def start_camera_preview(self):
         if (self.previewing):
-            print ("Tried to start an existing process: camera preview")
+            logger.warning("Tried to start an existing process: "+
+                           "camera preview")
             return False
         else:
             try:
@@ -100,7 +108,7 @@ class camera_controller:
                 self.previewing = True
                 return True
             except PiCameraError as err:
-                print ("Camera error: " + err)
+                logger.error("Camera error: " + err)
                 return False
         
     
@@ -110,16 +118,17 @@ class camera_controller:
     '''
     def stop_camera_preview(self):
         if (not self.previewing):
-            print ("Tried to stop a non-existent process: camera preview")
+            logger.warning("Tried to stop a non-existent process: " +
+                           "camera preview")
             return False
         else:
             try:
                 self.camera.stop_preview()
                 self.previewing = False
                 return True
-        except PiCameraError as err:
-            print ("Camera error: " + err)
-            return False
+            except PiCameraError as err:
+                logger.warning("Camera error: " + err)
+                return False
    
     ''' function start_camera_stream:
         starts a camera stream, as a background process

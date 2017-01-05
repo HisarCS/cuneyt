@@ -7,9 +7,10 @@ class motor_controller:
         pwm: PWM(0x40) where pwm is Adafruit_PWM_Servo_Driver -> PWM
     '''
 
-    def __init__(self, GPIO, pwm):
+    def __init__(self, GPIO, pwm, logger):
         self.pwm = pwm
         self.GPIO = GPIO
+        self.logger = logger
         
         #initialize motor pins
         '''
@@ -56,6 +57,7 @@ class motor_controller:
         runs a specified motor (1 thru 4) 
         in the given direction (1 : forward, 0 : backward)
         with the given speed (0 thru 255)
+        returns True if succeeds
     '''
     def motor(self, no, direction, speed):
         GPIO = self.GPIO
@@ -88,14 +90,15 @@ class motor_controller:
             GPIO.output(m4a,a)
             GPIO.output(m4b,b)
             self.pwm.setPWM(m4e, 0, speed_pwm)
-
+    
         else:
-            raise Exception("Motor Number Out Of Bounds")
-
+            self.logger.error("motor index out of bounds")
+            return False
+        return True
     ''' function stop_all:
         stops all motors, setting both inputs to high and enable to 0
     '''
-    def stop_all(self)
+    def stop_all(self):
         for i in [m1e,m2e,m3e,m4e]:
             self.pwm.setPWM(i, 0, 0)
         for i in [m1a,m1b,m2a,m2b,m3a,m3b,m4a,m4b]:
