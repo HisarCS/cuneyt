@@ -2,9 +2,9 @@
 import motor_controller
 import lidar
 import camera_controller
+import logger
 
 #import standard libraries
-import logging
 from multiprocessing import Process
 from Adafruit_PWM_Servo_Driver import PWM
 
@@ -31,7 +31,7 @@ class cuneyt:
 
     def __init__(self):
         #set logger field and setup logger
-        self.logger = logging
+        self.logger = logger.logger()
         self.logger.basicConfig(filename = "logs.txt", level = logging.DEBUG)
  
         #try to connect to the pwm shield via i2c
@@ -69,9 +69,7 @@ class cuneyt:
         keeping all axes stable i.e. No rotational motion
     '''
     def go_towards(self, direction, speed):
-        raise Exception("Not Yet Implemented")
-        #TODO: Implement the trig calculations as a function
-
+        self.move(direction, 0, speed, 0)
     ''' function start_sensor_sweep:
         starts ultrasonic sensors in sweeping motion, in parallel
     '''
