@@ -52,6 +52,26 @@ class cuneyt:
        # self.lidar_process = Process(target = self.lidar.sweep)
        # self.lidar_running = False
 
+    ''' function move:
+        moves the robot in the given direction with the given speed
+        w.r.t robot coordinates while also turning in the given 
+        direction and speed 
+        d_translate is an angle, d_turn is 1 or 0 1: CW, 0: CCW
+        speeds are limited by 255 individually and their sum is also
+        limited at 255, higher sums will be mapped accordingly to avoid
+        conflicts with the motor_controller library
+    '''
+    def move(self, d_translate, d_turn, s_translate, s_turn):
+        raise Exception("Not Yet Implemented")
+
+    ''' function go_towards:
+        moves the robot in the given direction, with the given speed
+        keeping all axes stable i.e. No rotational motion
+    '''
+    def go_towards(self, direction, speed):
+        raise Exception("Not Yet Implemented")
+        #TODO: Implement the trig calculations as a function
+
     ''' function start_sensor_sweep:
         starts ultrasonic sensors in sweeping motion, in parallel
     '''
