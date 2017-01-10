@@ -1,3 +1,5 @@
+import math
+
 class motor_controller:
 
     ''' function __init__
@@ -7,10 +9,18 @@ class motor_controller:
         pwm: PWM(0x40) where pwm is Adafruit_PWM_Servo_Driver -> PWM
     '''
 
-    def __init__(self, GPIO, pwm, logger):
+    def __init__(self, GPIO, pwm, alpha, logger):
+        '''
+        copy pin controllers and logger
+        '''
         self.pwm = pwm
         self.GPIO = GPIO
         self.logger = logger
+        '''
+            set the wheel angle, the angle towards which the robot moves 
+            when wheel turns in the positive direction
+        '''
+        self.wheel_angle = alpha        
         
         #initialize motor pins
         '''
@@ -55,17 +65,16 @@ class motor_controller:
 
     ''' function motor
         runs a specified motor (1 thru 4) 
-        in the given direction (1 : forward, 0 : backward)
-        with the given speed (0 thru 255)
+        with the given speed (-255 thru 255), negative meaning backwards
         returns True if succeeds
     '''
-    def motor(self, no, direction, speed):
+    def motor(self, no, speed):
         GPIO = self.GPIO
         a,b = GPIO.LOW,GPIO.LOW
         speed_pwm = speed * 16
         
         #set direction
-        if direction == 1:
+        if speed > 0:
             a = GPIO.HIGH
         else:
             b = GPIO.HIGH
@@ -103,3 +112,41 @@ class motor_controller:
             self.pwm.setPWM(i, 0, 0)
         for i in [m1a,m1b,m2a,m2b,m3a,m3b,m4a,m4b]:
             self.GPIO.output(i, GPIO.LOW)
+    ''' function move:
+        moves the robot in the given direction with the given speed
+        w.r.t robot coordinates while also turning in the given 
+        direction and speed 
+        d_translate is an angle, d_turn is 1 or 0 1: CW, 0: CCW
+        speeds are limited by 255 individually and their sum is also
+        limited at 255, higher sums will be mapped accordingly to avoid
+        conflicts with the motor_controller library
+    '''
+
+    def move(self, dir_translate, dir_rotate, s_translate, s_rotate):
+        '''
+            trig calculations to go in set direction
+        '''
+        #left motors: motors that move the robot leftward when rotating forward
+        left_motors = (-1) * s_translate * math.sin(dir_translate - self.alpha)
+        #right motors: motors that move the robot rightward when rotating forward
+        right_motors = s_translate * math.cos(dir_translate - self.alpha)
+        
+        #modify speeds by rotation component
+        m1 = left_motors + s_rotate
+        m2 = right_motors + s_rotate
+        m3 = left_motors + s_rotate
+        m4 = right_motors + s_rotate
+        
+        #limit speeds to 255 to avoid errors
+        mx = max(m1,m2,m3,m4)
+        if mx > 255:
+            m1 = m1 * 255 / mx
+            m2 = m2 * 255 / mx
+            m3 = m3 * 255 / mx
+            m4 = m4 * 255 / mx
+
+        #send speed to motors
+        self.motor(1, m1)
+        self.motor(2, m2)
+        self.motor(3, m3)
+        self.motor(4, m4)

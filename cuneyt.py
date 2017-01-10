@@ -3,7 +3,7 @@ import motor_controller
 import lidar
 import camera_controller
 import logger
-
+import math
 #import standard libraries
 from multiprocessing import Process
 from Adafruit_PWM_Servo_Driver import PWM
@@ -12,7 +12,7 @@ from Adafruit_PWM_Servo_Driver import PWM
     The class where all the components of Cuneyt, the robot, are put together
     includes the most basic functionality of Cuneyt
     Conventions for ALL functions:
-    - angles are given in degrees
+    - angles are given in radians
     - all angles and directions are relative to Cuneyt coordinates:
         - +x : forward
         - +y : right
@@ -44,7 +44,8 @@ class cuneyt:
         self.lidar = lidar.lidar(self.pwm, logger)
 
         #create motor controller object
-        self.motors = motor_controller.motor_controller(self.GPIO, self.pwm, logger)
+        self.motors = motor_controller.motor_controller(self.GPIO, self.pwm, 
+                                                        (math.pi / 2), logger)
 
         #create camera controlller object without flipping the image
         self.camera = camera_controller.camera_controller(self.pwm, False, logger)
