@@ -1,4 +1,5 @@
 '''
+test
 This is a config file that Cuneyt needs to function,
 all following fields MUST be included for cuneyt to work
 actual values are not included due to security concerns
