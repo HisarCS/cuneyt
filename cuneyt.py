@@ -3,10 +3,12 @@ import motor_controller
 import lidar
 import camera_controller
 import logger
-import math
+
 #import standard libraries
 from multiprocessing import Process
 from Adafruit_PWM_Servo_Driver import PWM
+import math
+import subprocess
 
 ''' class cuneyt:
     The class where all the components of Cuneyt, the robot, are put together
@@ -52,25 +54,12 @@ class cuneyt:
 
        # self.lidar_process = Process(target = self.lidar.sweep)
        # self.lidar_running = False
-
-    ''' function move:
-        moves the robot in the given direction with the given speed
-        w.r.t robot coordinates while also turning in the given 
-        direction and speed 
-        d_translate is an angle, d_turn is 1 or 0 1: CW, 0: CCW
-        speeds are limited by 255 individually and their sum is also
-        limited at 255, higher sums will be mapped accordingly to avoid
-        conflicts with the motor_controller library
     '''
-    def move(self, d_translate, d_turn, s_translate, s_turn):
-        raise Exception("Not Yet Implemented")
-
-    ''' function go_towards:
-        moves the robot in the given direction, with the given speed
-        keeping all axes stable i.e. No rotational motion
+        runs the update script
     '''
-    def go_towards(self, direction, speed):
-        self.move(direction, 0, speed, 0)
+    def update(self):
+        subprocess.call("./update.sh")
+
     ''' function start_sensor_sweep:
         starts ultrasonic sensors in sweeping motion, in parallel
     '''
@@ -82,21 +71,6 @@ class cuneyt:
     '''
     def get_sensor_sweep(self):
         raise Exception("Not Yet Implemented")
-
-    ''' function turn:
-        turns the robot in the given direction (1 : CW, 0 : CCW)
-        by the given angle, at the given speed
-    '''
-    def turn(self, direction, angle, speed):
-        raise Exception("Not Yet Implemented")
-
-    ''' function go_towards:
-        moves the robot in the given direction, with the given speed
-        keeping all axes stable i.e. No rotational motion
-    '''
-    def go_towards(self, direction, speed):
-        raise Exception("Not Yet Implemented")
-        #TODO: Implement the trig calculations as a function
 
     ''' function capture_panorama:
         captures multiple pictures, at the given bounds, and stitches
