@@ -114,15 +114,14 @@ class motor_controller:
             self.GPIO.output(i, GPIO.LOW)
     ''' function move:
         moves the robot in the given direction with the given speed
-        w.r.t robot coordinates while also turning in the given 
-        direction and speed 
+        w.r.t robot coordinates while also turning with the given speed 
         d_translate is an angle, d_turn is 1 or 0 1: CW, 0: CCW
-        speeds are limited by 255 individually and their sum is also
-        limited at 255, higher sums will be mapped accordingly to avoid
+        speeds are limited by -+255 individually and their sum is also
+        limited at -+255, higher sums will be mapped accordingly to avoid
         conflicts with the motor_controller library
     '''
 
-    def move(self, dir_translate, dir_rotate, s_translate, s_rotate):
+    def move(self, dir_translate, s_translate, s_rotate):
         '''
             trig calculations to go in set direction
         '''
@@ -150,3 +149,15 @@ class motor_controller:
         self.motor(2, m2)
         self.motor(3, m3)
         self.motor(4, m4)
+
+    '''
+        wrapper for move for only turning the robot around its axis
+    '''
+    def turn(self, speed):
+        self.move(0,0,speed)
+
+    '''
+        wrapper for move for only translating the robot
+    '''
+    def translate(self, direction, speed):
+        self.move(direction, speed, 0)
