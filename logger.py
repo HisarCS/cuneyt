@@ -23,7 +23,7 @@ class logger:
         self.connected = False
         self.backlog_index = 0
         self.backlog_process = Process(target = self.backlog)
-        
+            
     def cache(self, tp, data, t):
         with open(config.backlog_file, 'a') as backlog_file:
             backlog_file.write([tp, data, t])

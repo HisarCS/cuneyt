@@ -1,4 +1,7 @@
 import picamera
+import config
+PiCameraError = picamera.PiCameraError
+
 class camera_controller:
 
     '''
@@ -10,10 +13,10 @@ class camera_controller:
     def __init__(self, pwm, flip, logger):
         #initialize the raspberry pi camera module
         self.camera = picamera.PiCamera()
-        camera.resolution = (1024, 768)
+        self.camera.resolution = (1024, 768)
             
         #update this
-        self.servo_pin = 0
+        self.servo_pin = 13
         
         #add pwm controller as a field
         self.pwm = pwm
@@ -35,7 +38,7 @@ class camera_controller:
         is theta * 3 + 160
     '''
     def look_at(self,angle):
-        pwm.setPWM(self.servo_pin, 0, 160 + 3 * angle)
+        self.pwm.setPWM(self.servo_pin, 0, 160 + 3 * angle)
 
     ''' function take_picture:
         wrapper for camera.capture, saves image with the given name
@@ -44,7 +47,8 @@ class camera_controller:
     '''
     def take_picture(self, name):
         try:
-            self.camera.capture('./captures' + name)
+            self.camera.capture("./" + config.captures_folder +'/images/' + 
+				name)
             return True
         except PiCameraError as err:
             self.logger.error("Camera error: " + err)
@@ -69,7 +73,8 @@ class camera_controller:
             return False
         else:
             try:
-                self.camera.start_recording('./videos' + name)
+                self.camera.start_recording(config.captures_folder + 
+					    './videos' + name)
                 self.recording = True
                 return True
             except PiCameraError as err:
@@ -108,7 +113,7 @@ class camera_controller:
                 self.previewing = True
                 return True
             except PiCameraError as err:
-                logger.error("Camera error: " + err)
+                self.logger.error("Camera error: " + err)
                 return False
         
     
@@ -118,7 +123,7 @@ class camera_controller:
     '''
     def stop_camera_preview(self):
         if (not self.previewing):
-            logger.warning("Tried to stop a non-existent process: " +
+            self.logger.warning("Tried to stop a non-existent process: " +
                            "camera preview")
             return False
         else:
@@ -127,8 +132,8 @@ class camera_controller:
                 self.previewing = False
                 return True
             except PiCameraError as err:
-                logger.warning("Camera error: " + err)
-                return False
+		self.logger.warning("Camera error: " + err)
+		return False
    
     ''' function start_camera_stream:
         starts a camera stream, as a background process

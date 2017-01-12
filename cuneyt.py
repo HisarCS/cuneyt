@@ -9,7 +9,8 @@ from multiprocessing import Process
 from Adafruit_PWM_Servo_Driver import PWM
 import math
 import subprocess
-
+import RPi.GPIO as GPIO
+print PWM
 ''' class cuneyt:
     The class where all the components of Cuneyt, the robot, are put together
     includes the most basic functionality of Cuneyt
@@ -20,7 +21,6 @@ import subprocess
         - +y : right
 '''
 class cuneyt:
-
     '''function __init__():
        constructor for cuneyt, initializes basic cuneyt components:
             lidar,
@@ -30,30 +30,35 @@ class cuneyt:
     '''
             #TODO: senseHat,
             #TODO: alexa
-
+    camera = None
+    pwm = None
+    lidar = None
+    motors = None
+    logger = None
     def __init__(self):
         #set logger field and setup logger
         self.logger = logger.logger()
-        self.logger.basicConfig(filename = "logs.txt", level = logging.DEBUG)
- 
+ 	self.GPIO = GPIO
+	self.GPIO.setmode(self.GPIO.BCM)
         #try to connect to the pwm shield via i2c
-        try:
-            self.pwm = PWM(0x40)
-        except:
-            self.logger.critical("Could not connect to pwm via i2c")
+        self.pwm = PWM(0x40)
 
         #create lidar object
-        self.lidar = lidar.lidar(self.pwm, logger)
+        #self.lidar = lidar.lidar(self.pwm, logger)
 
         #create motor controller object
         self.motors = motor_controller.motor_controller(self.GPIO, self.pwm, 
-                                                        (math.pi / 2), logger)
+                                                 (math.pi / 2), self.logger)
 
         #create camera controlller object without flipping the image
-        self.camera = camera_controller.camera_controller(self.pwm, False, logger)
+        self.camera = camera_controller.camera_controller(self.pwm, False, 
+							  self.logger)
 
        # self.lidar_process = Process(target = self.lidar.sweep)
        # self.lidar_running = False
+ 
+    def close(self):
+	self.GPIO.cleanup()
     '''
         runs the update script
     '''

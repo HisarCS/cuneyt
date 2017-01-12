@@ -51,7 +51,8 @@ class motor_controller:
         self.m4e = 9
 
         #set up raspi pins as output
-        for i in [m1a,m1b,m2a,m2b,m3a,m3b,m4a,m4b]:
+        for i in [self.m1a,self.m1b,self.m2a,self.m2b,
+		  self.m3a,self.m3b,self.m4a,self.m4b]:
             self.GPIO.setup(i,self.GPIO.OUT);
 
         '''
