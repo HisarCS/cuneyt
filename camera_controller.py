@@ -1,5 +1,11 @@
+#standard library imports
+from multiprocessing import Process
 import picamera
+
+#import cuneyt config info
 import config
+
+#set error types
 PiCameraError = picamera.PiCameraError
 
 class camera_controller:
@@ -14,13 +20,19 @@ class camera_controller:
         #initialize the raspberry pi camera module
         self.camera = picamera.PiCamera()
         self.camera.resolution = (1024, 768)
-            
-        #update this
+         
+	#setup servo pin and initial servo angle   
         self.servo_pin = 13
         
         #add pwm controller as a field
         self.pwm = pwm
         
+	#setup servo pin and initial servo angle
+	self.servo_pin = 13
+	self.pwm.setPWM(self.servo_pin, 0, 1175)
+	self.servo_process = None
+	self.servo_value = 1175
+	
         #add error logger as a field
         self.logger = logger
 
@@ -38,7 +50,14 @@ class camera_controller:
         is theta * 3 + 160
     '''
     def look_at(self,angle):
-        self.pwm.setPWM(self.servo_pin, 0, 160 + 3 * angle)
+	if(angle < 30):
+	    return False
+	
+	val = (angle-90) % 180
+	servo_val = 500 + angle * 1350/180
+	self.pwm.setPWM(self.servo_pin,0,servo_val)
+	self.servo_value = servo_val
+	return True
 
     ''' function take_picture:
         wrapper for camera.capture, saves image with the given name
