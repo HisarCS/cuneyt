@@ -3,6 +3,7 @@ import motor_controller
 import lidar
 import camera_controller
 import logger
+import resources
 
 #import standard libraries
 from multiprocessing import Process
@@ -26,7 +27,8 @@ class cuneyt:
             lidar,
             motor_controller,
             camera,
-            logging
+            logging,
+	    resources
     '''
             #TODO: senseHat,
             #TODO: alexa
@@ -35,12 +37,17 @@ class cuneyt:
     lidar = None
     motors = None
     logger = None
+    resources = None
+
     def __init__(self):
         #set logger field and setup logger
         self.logger = logger.logger()
  	self.GPIO = GPIO
 	self.GPIO.setmode(self.GPIO.BCM)
-        #try to connect to the pwm shield via i2c
+        
+	self.resources = resources.resources()
+	
+	#try to connect to the pwm shield via i2c
         self.pwm = PWM(0x40)
 
         #create lidar object
