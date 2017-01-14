@@ -43,8 +43,18 @@ else
 	then
 		echo "dtparam already exists"
 	else
-		echo "dtparam=i2c=1" > $CONFIG_FILE
+		echo "dtparam=i2c_arm=on" > $CONFIG_FILE
 	fi
+fi
+
+FILE="/etc/modprobe.d/raspi-blacklist.conf"
+TARGET_KEY="^blacklist i2c-bcm2708"
+ALT_KEY="^i2c-bcm2708"
+if [ ! -f $FILE ];
+then
+	modprobe "i2c-bcm2708"
+	sed -i '/$TARGET_KEY/d' FILE
+	sed -i '/$ALT_KEY/d' FILE
 fi
 
 echo "getting updates"
