@@ -33,4 +33,26 @@ REPLACEMENT_VALUE="1"
 sed -i "s/\($TARGET_KEY *= *\).*/\1$REPLACEMENT_VALUE/" $CONFIG_FILE
 
 echo "enabling RPi I2C"
+TARGET_KEY="^device_tree_param="
+ALT_KEY="^dtparam="
+if grep -Fq "$TARGET_KEY" $CONFIG_FILE
+then
+	echo "device_tree_param already exists"
+else
+	if grep -Fq "$ALT_KEY" $CONFIG_FILE
+	then
+		echo "dtparam already exists"
+	else
+		echo "dtparam=i2c=1" > $CONFIG_FILE
+	fi
+fi
+
+echo "getting updates"
+apt-get update
+
+echo "getting upgrades"
+apt-get upgrade
+echo "updating your Raspberry Pi firmware"
+rpi-update
+
 
