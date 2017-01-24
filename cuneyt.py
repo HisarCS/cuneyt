@@ -11,7 +11,8 @@ from Adafruit_PWM_Servo_Driver import PWM
 import math
 import subprocess
 import RPi.GPIO as GPIO
-print PWM
+import tweepy
+
 ''' class cuneyt:
     The class where all the components of Cuneyt, the robot, are put together
     includes the most basic functionality of Cuneyt
@@ -28,7 +29,8 @@ class cuneyt:
             motor_controller,
             camera,
             logging,
-	    resources
+	    resources,
+            tweepy
     '''
             #TODO: senseHat,
             #TODO: alexa
@@ -61,6 +63,11 @@ class cuneyt:
         self.camera = camera_controller.camera_controller(self.pwm, False, 
 							  self.logger)
 
+        auth = tweepy.OAuthHandler(config.twitter_consumer_key, 
+                                   config.twitter_consumer_secret)
+        auth.set_access_token(config.twitter_access_token, 
+                              config.twitter_access_secret)
+        self.twitter = tweepy.API(auth)
        # self.lidar_process = Process(target = self.lidar.sweep)
        # self.lidar_running = False
  
@@ -72,6 +79,11 @@ class cuneyt:
     def update(self):
         subprocess.call("./update.sh")
 
+    ''' function tweet(message):
+        Tweets the message on @cuneytBot
+    '''
+    def tweet(self, message):
+        self.twitter.update_status(message)
     ''' function start_sensor_sweep:
         starts ultrasonic sensors in sweeping motion, in parallel
     '''

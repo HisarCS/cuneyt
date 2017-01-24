@@ -154,7 +154,22 @@ class lidar:
             return [sensors[2], sensors[0], sensors[3]]
         else:
             return [sensors[0], sensors[2], sensors[1]]
-                                                
+
+    ''' function read_environment:
+        reads distances from the center of the robot with the given intervals
+        returning the resulting data points in an array
+    '''
+    def read_environment(self, interval):
+        if (interval <= 0):
+            self.logger.error("Value Error: interval must be greater than 0")
+            return None
+        result = [None] * (360 / interval)
+        for i in xrange(0,180,interval):
+            sensors = self.read_angle(i)
+            result[i / interval] = sensors[0]
+            result[(i + 180) / interval] = sensors[1]
+        return result
+
     ''' function sweep
         constantly scanse the environment and records the distances from cuneyt
         in all directions, updates the self.environment array with tuples 
