@@ -7,7 +7,7 @@ import resources
 
 #import standard libraries
 from multiprocessing import Process
-from Adafruit_PWM_Servo_Driver import PWM
+import Adafruit_PCA9685
 import math
 import subprocess
 import RPi.GPIO as GPIO
@@ -50,7 +50,7 @@ class cuneyt:
 	self.resources = resources.resources()
 	
 	#try to connect to the pwm shield via i2c
-        self.pwm = PWM(0x40)
+        self.pwm = Adafruit_PCA9685.PCA9685()
 
         #create lidar object
         #self.lidar = lidar.lidar(self.pwm, logger)
