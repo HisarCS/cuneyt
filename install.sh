@@ -6,18 +6,23 @@ git clone "https://github.com/hisarcs/cuneyt"
 echo "upgrading pip"
 pip install pip-upgrade
 
+echo "downloading cuneyt libraries"
+pip install tweepy
+pip install pymongo
+pip install pyglet
+
 echo "creating resources and captures folders for cuneyt"
 mkdir cuneyt/resources 
 mkdir cuneyt/captures cuneyt/captures/images cuneyt/captures/videos
 
 echo "creating configuration file for cuneyt"
-echo "\"mongo_user\" = \"my_mongo_username\"
-\"mongo_pass\" = \"my_mongo_password\"
-\"mongo_url\" = \"my_mongo_url\"
-\"log_file\" = \"log.txt\" #feel free to change the filename
-\"backlog_file\" = \"backlog.csv\" #feel free to change the filename
-\"resource_folder\" = \"resources\"
-\"captures_folder\" = \"captures\"" > config.py
+echo "mongo_user = \"my_mongo_username\"
+mongo_pass = \"my_mongo_password\"
+mongo_url = \"my_mongo_url\"
+log_file = \"log.txt\" #feel free to change the filename
+backlog_file = \"backlog.csv\" #feel free to change the filename
+resource_folder = \"resources\"
+captures_folder = \"captures\"" > config.py
       
 echo "downloading required libraries"
 
@@ -57,6 +62,8 @@ then
 	sed -i '/$ALT_KEY/d' FILE
 fi
 
+echo "changing file permissions"
+sudo chmod o=rwx cuneyt/*
 echo "getting updates"
 apt-get update
 
