@@ -3,6 +3,12 @@
 echo "getting cuneyt files from the repo"
 git clone "https://github.com/hisarcs/cuneyt"
 
+echo "installing i2c-tools"
+apt-get install i2c-tools
+
+echo "instaling git, python"
+sudo apt-get install git build-essential python-dev
+
 echo "upgrading pip"
 pip install pip-upgrade
 
@@ -10,6 +16,9 @@ echo "downloading cuneyt libraries"
 pip install tweepy
 pip install pymongo
 pip install pyglet
+
+git clone https://github.com/adafruit/Adafruit_Python_PCA9685.git ~/Adafruit_Python_PCA9685
+python ~/Adafruit_Python_PCA9685/setup.py install
 
 echo "creating resources and captures folders for cuneyt"
 mkdir cuneyt/resources 
@@ -64,6 +73,7 @@ fi
 
 echo "changing file permissions"
 sudo chmod o=rwx cuneyt/*
+
 echo "getting updates"
 apt-get update
 
