@@ -34,13 +34,17 @@ mongo_url = \"my_mongo_url\"
 log_file = \"log.txt\" #feel free to change the filename
 backlog_file = \"backlog.csv\" #feel free to change the filename
 resource_folder = \"resources\"
-captures_folder = \"captures\"" > cuneyt/config.py
+captures_folder = \"captures\"
+twitter_consumer_key = \"my_consumer_key\"
+twitter_consumer_secret = \"my_consumer_secret\"
+twitter_access_token \ \"my_access_token\"
+twitter_access_secret = \"my_access_secret\"" > cuneyt/config.py
       
 echo "downloading required libraries"
 
 echo "changing file permissions"
 sudo chmod o=rwx cuneyt cuneyt/* cuneyt/.git
-sudo chmod o=rwx ~/Adafruit_Python_PCA9685 ~/Adafruit_Python_PCA9685/*
+sudo chmod o=rwx home/pi/Adafruit_Python_PCA9685 ~/Adafruit_Python_PCA9685/*
 echo "getting updates"
 apt-get update
 
