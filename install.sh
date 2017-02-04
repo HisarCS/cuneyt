@@ -16,10 +16,13 @@ echo "downloading cuneyt libraries"
 pip install tweepy
 pip install pymongo
 pip install pyglet
+cd /home/pi
+mkdir Adafruit_Python_PCA9685
+git clone https://github.com/adafruit/Adafruit_Python_PCA9685.git Adafruit_Python_PCA9685
+cd Adafruit_Python_PCA9685
+python setup.py install
 
-git clone https://github.com/adafruit/Adafruit_Python_PCA9685.git ~/Adafruit_Python_PCA9685
-python ~/Adafruit_Python_PCA9685/setup.py install
-
+cd /home/pi/Desktop
 echo "creating resources and captures folders for cuneyt"
 mkdir cuneyt/resources 
 mkdir cuneyt/captures cuneyt/captures/images cuneyt/captures/videos
@@ -31,49 +34,13 @@ mongo_url = \"my_mongo_url\"
 log_file = \"log.txt\" #feel free to change the filename
 backlog_file = \"backlog.csv\" #feel free to change the filename
 resource_folder = \"resources\"
-captures_folder = \"captures\"" > config.py
+captures_folder = \"captures\"" > cuneyt/config.py
       
 echo "downloading required libraries"
 
-echo "increasing gpu memory"
-CONFIG_FILE="config.txt"
-TARGET_KEY="gpu_mem"
-REPLACEMENT_VALUE="256"
-sed -i "s/\($TARGET_KEY *= *\).*/\1$REPLACEMENT_VALUE/" $CONFIG_FILE
-
-echo "enabling RPi camera"
-TARGET_KEY="start_x"
-REPLACEMENT_VALUE="1"
-sed -i "s/\($TARGET_KEY *= *\).*/\1$REPLACEMENT_VALUE/" $CONFIG_FILE
-
-echo "enabling RPi I2C"
-TARGET_KEY="^device_tree_param="
-ALT_KEY="^dtparam="
-if grep -Fq "$TARGET_KEY" $CONFIG_FILE
-then
-	echo "device_tree_param already exists"
-else
-	if grep -Fq "$ALT_KEY" $CONFIG_FILE
-	then
-		echo "dtparam already exists"
-	else
-		echo "dtparam=i2c_arm=on" > $CONFIG_FILE
-	fi
-fi
-
-FILE="/etc/modprobe.d/raspi-blacklist.conf"
-TARGET_KEY="^blacklist i2c-bcm2708"
-ALT_KEY="^i2c-bcm2708"
-if [ ! -f $FILE ];
-then
-	modprobe "i2c-bcm2708"
-	sed -i '/$TARGET_KEY/d' FILE
-	sed -i '/$ALT_KEY/d' FILE
-fi
-
 echo "changing file permissions"
-sudo chmod o=rwx cuneyt/*
-
+sudo chmod o=rwx cuneyt cuneyt/* cuneyt/.git
+sudo chmod o=rwx ~/Adafruit_Python_PCA9685 ~/Adafruit_Python_PCA9685/*
 echo "getting updates"
 apt-get update
 
@@ -81,5 +48,5 @@ echo "getting upgrades"
 apt-get upgrade
 echo "updating your Raspberry Pi firmware"
 rpi-update
-
+echo "installation complete"
 
