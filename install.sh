@@ -27,6 +27,31 @@ echo "creating resources and captures folders for cuneyt"
 mkdir cuneyt/resources 
 mkdir cuneyt/captures cuneyt/captures/images cuneyt/captures/videos
 
+echo "creating pin definition file for cuneyt"
+echo "#motors
+motor1_a = 17 
+motor1_b = 4
+motor1_e = 7
+motor2_a = 27
+motor2_b = 18
+motor2_e = 6
+motor3_a = 12
+motor3_b = 16
+motor3_e = 8
+motor4_a = 20
+motor4_b = 21
+motor4_e = 9
+
+#servos
+camera_servo = 13
+ultrasonic_servo = 12
+
+#ultrasonic sensors
+ultra_front_e = 0
+ultra_front_t = 0
+ultra_back_e = 0
+ultra_back_t = 0" > cuneyt/pins.py
+
 echo "creating configuration file for cuneyt"
 echo "mongo_user = \"my_mongo_username\"
 mongo_pass = \"my_mongo_password\"
