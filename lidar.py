@@ -1,4 +1,5 @@
 import time
+import pins
 class lidar:
     def __init__(self, GPIO, pwm):
 
@@ -9,12 +10,11 @@ class lidar:
         self.settle_duration = 1
 
         #define GPIO pins
-        #TODO: fix these
-        self.u1e = 0
-        self.u1t = 0
-        self.u2e = 0
-        self.u2t = 0
-        self.servo = 12
+        self.u1e = pins.ultra_front_e
+        self.u1t = pins.ultra_front_t
+        self.u2e = pins.ultra_back_e
+        self.u2t = pins.ultra_back_t
+        self.servo = pins.ultrasonic_servo
         
         #setup GPIO pins
         self.GPIO.setup(u1e,self.GPIO.IN)
