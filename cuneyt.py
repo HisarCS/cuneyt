@@ -12,6 +12,7 @@ import math
 import subprocess
 import RPi.GPIO as GPIO
 import tweepy
+import config
 
 ''' class cuneyt:
     The class where all the components of Cuneyt, the robot, are put together
@@ -45,7 +46,7 @@ class cuneyt:
         #set logger field and setup logger
         self.logger = logger.logger()
  	self.GPIO = GPIO
-	self.GPIO.setmode(self.GPIO.BCM)
+ 	self.GPIO.setmode(self.GPIO.BCM)
         
 	self.resources = resources.resources()
 	

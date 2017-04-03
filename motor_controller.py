@@ -1,5 +1,4 @@
 import math
-import pins
 
 class motor_controller:
 
@@ -17,6 +16,7 @@ class motor_controller:
         self.pwm = pwm
         self.GPIO = GPIO
         self.logger = logger
+        self.alpha = alpha
         '''
             set the wheel angle, the angle towards which the robot moves 
             when wheel turns in the positive direction
@@ -35,21 +35,21 @@ class motor_controller:
             e pins are Adafruit_pwm pins
             !!!
         '''
-        self.m1a = pins.motor1_a
-        self.m1b = pins.motor1_b
-        self.m1e = pins.motor1_e
+        self.m1a = 17   
+        self.m1b = 4
+        self.m1e = 7
 
-        self.m2a = pins.motor2_a
-        self.m2b = pins.motor2_b
-        self.m2e = pins.motor2_e
+        self.m2a = 27
+        self.m2b = 18
+        self.m2e = 6
 
-        self.m3a = pins.motor3_a
-        self.m3b = pins.motor3_b
-        self.m3e = pins.motor3_e
+        self.m3a = 12
+        self.m3b = 16
+        self.m3e = 8
         
-        self.m4a = pins.motor4_a
-        self.m4b = pins.motor4_b
-        self.m4e = pins.motor4_e
+        self.m4a = 20
+        self.m4b = 21
+        self.m4e = 9
 
         #set up raspi pins as output
         for i in [self.m1a,self.m1b,self.m2a,self.m2b,
@@ -79,43 +79,41 @@ class motor_controller:
         if speed > 0:
             a = GPIO.HIGH
         else:
-            b = GPIO.HIGH
+            b = GPIO.LOW
 
         #send signals
         if no == 1:
-            GPIO.output(m1a,a)
-            GPIO.output(m1b,b)
-            self.pwm.setPWM(m1e, 0, speed_pwm)
+            GPIO.output(self.m1a,a)
+            GPIO.output(self.m1b,b)
+            self.pwm.set_pwm(self.m1e, 0, speed_pwm)
 
         elif no == 2:
-            GPIO.output(m2a,a)
-            GPIO.output(m2b,b)
-            self.pwm.setPWM(m2e, 0, speed_pwm)
+            GPIO.output(self.m2a,a)
+            GPIO.output(self.m2b,b)
+            self.pwm.set_pwm(self.m2e, 0, speed_pwm)
 
         elif no == 3:
-            GPIO.output(m3a,a)
-            GPIO.output(m3b,b)
-            self.pwm.setPWM(m3e, 0, speed_pwm)
+            GPIO.output(self.m3a,a)
+            GPIO.output(self.m3b,b)
+            self.pwm.set_pwm(self.m3e, 0, speed_pwm)
 
         elif no == 4:
-            GPIO.output(m4a,a)
-            GPIO.output(m4b,b)
-            self.pwm.setPWM(m4e, 0, speed_pwm)
+            GPIO.output(self.m4a,a)
+            GPIO.output(self.m4b,b)
+            self.pwm.set_pwm(self.m4e, 0, speed_pwm)
     
         else:
             self.logger.error("motor index out of bounds")
             return False
         return True
-
     ''' function stop_all:
         stops all motors, setting both inputs to high and enable to 0
     '''
     def stop_all(self):
-        for i in [m1e,m2e,m3e,m4e]:
-            self.pwm.setPWM(i, 0, 0)
-        for i in [m1a,m1b,m2a,m2b,m3a,m3b,m4a,m4b]:
-            self.GPIO.output(i, GPIO.LOW)
-
+        for i in [self.m1e,self.m2e,self.m3e,self.m4e]:
+            self.pwm.set_pwm(i, 0, 0)
+        for i in [self.m1a,self.m1b,self.m2a,self.m2b,self.m3a,self.m3b,self.m4a,self.m4b]:
+            self.GPIO.output(i, self.GPIO.LOW)
     ''' function move:
         moves the robot in the given direction with the given speed
         w.r.t robot coordinates while also turning with the given speed 
@@ -139,6 +137,7 @@ class motor_controller:
         m2 = right_motors + s_rotate
         m3 = left_motors + s_rotate
         m4 = right_motors + s_rotate
+        print("cycle")
         
         #limit speeds to 255 to avoid errors
         mx = max(m1,m2,m3,m4)
@@ -147,12 +146,15 @@ class motor_controller:
             m2 = m2 * 255 / mx
             m3 = m3 * 255 / mx
             m4 = m4 * 255 / mx
-
+        print(int(m1))
+        print(int(m2))
+        print(int(m3))
+        print(int(m4))
         #send speed to motors
-        self.motor(1, m1)
-        self.motor(2, m2)
-        self.motor(3, m3)
-        self.motor(4, m4)
+        self.motor(1, int(m1))
+        self.motor(2, int(m2))
+        self.motor(3, int(m3))
+        self.motor(4, int(m4))
 
     '''
         wrapper for move for only turning the robot around its axis
