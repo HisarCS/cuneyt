@@ -2,7 +2,7 @@ import cuneyt as cun
 import time
 import math
 cuneyt = cun.cuneyt()
-'''
+
 #forward
 cuneyt.motors.move(0, 100, 0)
 time.sleep(1)
@@ -26,9 +26,7 @@ time.sleep(1)
 #left dg backward
 cuneyt.motors.move(.75 * math.pi, 100, 0)
 time.sleep(1)
-'''
-cuneyt.motors.move(math.pi * 0.333 - 0.25 * math.pi, 100, 0)
-time.sleep(1)
+
 #stop
 cuneyt.motors.stop_all()
 time.sleep(1)
