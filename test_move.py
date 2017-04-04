@@ -27,6 +27,8 @@ time.sleep(1)
 cuneyt.motors.move(.75 * math.pi, 100, 0)
 time.sleep(1)
 
+#cuneyt.motors.move(math.pi * 0.333 - 0.25 * math.pi, 100, 0)
+#time.sleep(1)
 #stop
 cuneyt.motors.stop_all()
 time.sleep(1)

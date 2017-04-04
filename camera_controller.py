@@ -4,6 +4,7 @@ import picamera
 
 #import cuneyt config info
 import config
+import pins
 
 #set error types
 PiCameraError = picamera.PiCameraError
@@ -22,13 +23,12 @@ class camera_controller:
         self.camera.resolution = (1024, 768)
          
 	#setup servo pin and initial servo angle   
-        self.servo_pin = 13
         
         #add pwm controller as a field
         self.pwm = pwm
         
 	#setup servo pin and initial servo angle
-	self.servo_pin = 13
+	self.servo_pin = pins.camera_servo
 	self.pwm.set_pwm(self.servo_pin, 0, 1175)
 	self.servo_process = None
 	self.servo_value = 1175

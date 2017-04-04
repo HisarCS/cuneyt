@@ -2,7 +2,6 @@
     file pins.py
     has pin information for motors, servos etc.
 '''
-
 #motors
 motor1_a = 17
 motor1_b = 4

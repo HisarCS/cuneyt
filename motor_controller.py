@@ -1,4 +1,5 @@
 import math
+import pins
 
 class motor_controller:
 
@@ -35,21 +36,21 @@ class motor_controller:
             e pins are Adafruit_pwm pins
             !!!
         '''
-        self.m1a = 17   
-        self.m1b = 4
-        self.m1e = 7
+        self.m1a = pins.motor1_a
+        self.m1b = pins.motor1_b
+        self.m1e = pins.motor1_e
 
-        self.m2a = 27
-        self.m2b = 18
-        self.m2e = 6
+        self.m2a = pins.motor2_a
+        self.m2b = pins.motor2_b
+        self.m2e = pins.motor2_e
 
-        self.m3a = 12
-        self.m3b = 16
-        self.m3e = 8
+        self.m3a = pins.motor3_a
+        self.m3b = pins.motor3_b
+        self.m3e = pins.motor3_e
         
-        self.m4a = 20
-        self.m4b = 21
-        self.m4e = 9
+        self.m4a = pins.motor4_a
+        self.m4b = pins.motor4_b
+        self.m4e = pins.motor4_e
 
         #set up raspi pins as output
         for i in [self.m1a,self.m1b,self.m2a,self.m2b,
