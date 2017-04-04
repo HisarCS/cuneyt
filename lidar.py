@@ -10,7 +10,6 @@ class lidar:
         self.settle_duration = 1
 
         #define GPIO pins
-        #TODO: fix these
         self.u1e = pins.ultra_front_e
         self.u1t = pins.ultra_front_t
         self.u2e = pins.ultra_back_e
