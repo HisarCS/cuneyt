@@ -22,12 +22,14 @@ class camera_controller:
         self.camera = picamera.PiCamera()
         self.camera.resolution = (1024, 768)
          
+	#setup servo pin and initial servo angle   
+        
         #add pwm controller as a field
         self.pwm = pwm
         
 	#setup servo pin and initial servo angle
 	self.servo_pin = pins.camera_servo
-	self.pwm.setPWM(self.servo_pin, 0, 1175)
+	self.pwm.set_pwm(self.servo_pin, 0, 1175)
 	self.servo_process = None
 	self.servo_value = 1175
 	
@@ -53,7 +55,7 @@ class camera_controller:
 	
 	val = (angle-90) % 180
 	servo_val = 500 + angle * 1350/180
-	self.pwm.setPWM(self.servo_pin,0,servo_val)
+	self.pwm.set_pwm(self.servo_pin,0,servo_val)
 	self.servo_value = servo_val
 	return True
 

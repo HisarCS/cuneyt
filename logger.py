@@ -38,7 +38,7 @@ class logger:
                 return True
             else:
                 self.connected = False
-                raise Exception("Not connected")
+                #raise Exception("Not connected")
         except:
             cache(tp,data,t)
             return False
@@ -47,7 +47,7 @@ class logger:
         raise Exception("Not Yet Implemented")
 
     def debug(self, data):
-        succ = self.insert("debug", data, time.time())
+        #succ = self.insert("debug", data, time.time())
         self.log.debug(data)
 
     def info(self, data):
