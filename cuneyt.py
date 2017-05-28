@@ -4,6 +4,7 @@ import lidar
 import camera_controller
 import logger
 import resources
+from i2c_motor_driver import i2c_motor_driver
 
 #import standard libraries
 from multiprocessing import Process
@@ -42,7 +43,7 @@ class cuneyt:
     logger = None
     resources = None
 
-    def __init__(self):
+    def __init__(self, motor_con = 1):
         #set logger field and setup logger
         self.logger = logger.logger()
  	self.GPIO = GPIO
@@ -50,25 +51,35 @@ class cuneyt:
         
 	self.resources = resources.resources()
 	
-	#try to connect to the pwm shield via i2c
-        self.pwm = Adafruit_PCA9685.PCA9685()
+        #if motor_con, motor controller is based on PCA9685
+	if(motor_con):
+            #try to connect to the pwm shield via i2c
+            self.pwm = Adafruit_PCA9685.PCA9685()
+            #create motor controller object
+            self.motors = motor_controller.motor_controller(self.GPIO, self.pwm,
+                                                     (math.pi / 2), self.logger)
 
+	else:
+            self.motors = i2c_motor_driver(self.logger)
         #create lidar object
         #self.lidar = lidar.lidar(self.pwm, logger)
-
-        #create motor controller object
-        self.motors = motor_controller.motor_controller(self.GPIO, self.pwm, 
-                                                 (math.pi / 2), self.logger)
-
+	
+	#camera is not eseential, so we can ignore erros:
         #create camera controlller object without flipping the image
-        self.camera = camera_controller.camera_controller(self.pwm, False, 
-							  self.logger)
-
-        auth = tweepy.OAuthHandler(config.twitter_consumer_key, 
-                                   config.twitter_consumer_secret)
-        auth.set_access_token(config.twitter_access_token, 
-                              config.twitter_access_secret)
-        self.twitter = tweepy.API(auth)
+        try:
+            self.camera = camera_controller.camera_controller(self.pwm, False, 
+        							  self.logger)
+        except Exception,e:
+            self.logger.warning("camera init error: "+repr(e))
+	#the following are NOT essential, so we can ignore errors if any occur
+	try:
+            auth = tweepy.OAuthHandler(config.twitter_consumer_key, 
+                                       config.twitter_consumer_secret)
+            auth.set_access_token(config.twitter_access_token, 
+                                  config.twitter_access_secret)
+            self.twitter = tweepy.API(auth)
+        except Exception,e:
+            self.logger.warning("failed to initiate tweepy: "+repr(e))
        # self.lidar_process = Process(target = self.lidar.sweep)
        # self.lidar_running = False
  

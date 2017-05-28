@@ -14,22 +14,27 @@ class logger:
 
     def __init__(self):
         self.log = logging
-        self.client = MongoClient ("mongodb://" + 
-                                    config.mongo_user + ":" +
-                                    config.mongo_pass + "@" +
-                                    config.mongo_url)
-        self.db = self.client.cuneyt_db
-        self.log.basicConfig(filename = config.log_file, level = logging.DEBUG)
-        self.connected = False
-        self.backlog_index = 0
-        self.backlog_process = Process(target = self.backlog)
-            
+        #mongo logs are NOT essential, so we can ignore the errors here
+        try:
+            self.client = MongoClient ("mongodb://" + 
+                                        config.mongo_user + ":" +
+                                        config.mongo_pass + "@" +
+                                        config.mongo_url)
+            self.db = self.client.cuneyt_db
+            self.log.basicConfig(filename = config.log_file, level = logging.DEBUG)
+            self.connected = False
+            self.backlog_index = 0
+            self.backlog_process = Process(target = self.backlog)
+        except Exception,e:
+            self.log.warning("could not initialize mongo: "+repr(e))
+    
     def cache(self, tp, data, t):
-        with open(config.backlog_file, 'a') as backlog_file:
-            backlog_file.write([tp, data, t])
+	return None
+	#TODO: implement proper csv cache
+#        with open(config.backlog_file, 'a') as backlog_file:
+#            backlog_file.write([tp, data, t])
 
     def insert(self, tp, data, t):
-        succ = False
         try:
             if(self.db.log.insert_one ({"type" : tp,
                                         "time" : t,
@@ -40,7 +45,7 @@ class logger:
                 self.connected = False
                 #raise Exception("Not connected")
         except:
-            cache(tp,data,t)
+            self.cache(tp,data,t)
             return False
     
     def backlog(self):
