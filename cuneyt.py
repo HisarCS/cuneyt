@@ -4,14 +4,11 @@ import lidar
 import camera_controller
 import logger
 import resources
-from i2c_motor_driver import i2c_motor_driver
-
+import motor_controller
+from motor_controller import motor_controller as m_con
 #import standard libraries
 from multiprocessing import Process
-import Adafruit_PCA9685
-import math
 import subprocess
-import RPi.GPIO as GPIO
 import tweepy
 import config
 
@@ -43,25 +40,15 @@ class cuneyt:
     logger = None
     resources = None
 
-    def __init__(self, motor_con = 1):
+    def __init__(self, d = 20, motor_driver = motor_controller.gpio, 
+                       motor_setup = motor_controller.mecanum):
         #set logger field and setup logger
         self.logger = logger.logger()
- 	self.GPIO = GPIO
- 	self.GPIO.setmode(self.GPIO.BCM)
-        
 	self.resources = resources.resources()
 	
-        #if motor_con, motor controller is based on PCA9685
-	if(motor_con):
-            #try to connect to the pwm shield via i2c
-            self.pwm = Adafruit_PCA9685.PCA9685()
-            #create motor controller object
-            self.motors = motor_controller.motor_controller(self.GPIO, self.pwm,
-                                                     (math.pi / 2), self.logger)
-
-	else:
-            self.motors = i2c_motor_driver(self.logger)
-        #create lidar object
+	self.motors = m_con(d, motor_setup, motor_driver, self.logger)
+        
+	#create lidar object
         #self.lidar = lidar.lidar(self.pwm, logger)
 	
 	#camera is not eseential, so we can ignore erros:
@@ -84,7 +71,7 @@ class cuneyt:
        # self.lidar_running = False
  
     def close(self):
-	self.GPIO.cleanup()
+	self.m_con.cleanup()
     '''
         runs the update script
     '''
