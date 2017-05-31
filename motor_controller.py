@@ -22,17 +22,17 @@ class motor_controller:
     self.GPIO = GPIO
     self.motor_controller = motor_setup
     self.motor_driver = motor_driver
-    if motor_driver == 0:
+    if motor_driver == gpio:
       self.driver = motor_drivers.ada_motor_driver(GPIO, logger)
-    elif motor_driver == 1:
+    elif motor_driver == i2c:
       self.driver = motor_drivers.i2c_motor_driver(logger)
     if motor_setup == mecanum:
       self.controller = motor_controllers.mecanum(logger)
-      if motor_driver == 1:
+      if motor_driver == i2c:
         self.driver.init_module(pid,reset,4)
     elif motor_setup == differential:
       self.controller = motor_controllers.differential(d)
-      if motor_driver == 1:
+      if motor_driver == i2c:
         self.driver.init_module(pid,reset,2)
 
     #TODO: write motor_setup == omni

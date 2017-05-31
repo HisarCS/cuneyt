@@ -99,8 +99,8 @@ class ada_motor_driver:
     if no > 4 or no < 1:
       self.logger.warning("motor index out of bounds")
       return 0
-    GPIO.output(self.motors[no-1]['a'],a)
-    GPIO.output(self.motors[no-1]['b'],b)
+    self.GPIO.output(self.motors[no-1]['a'],a)
+    self.GPIO.output(self.motors[no-1]['b'],b)
     self.pwm.set_pwm(self.motors[no-1]['e'], 0, speed_pwm)
     return True
 
@@ -139,7 +139,7 @@ class ada_motor_driver:
       self.logger.warning("tried to write a velocity that's not supported")
       return 0
     motor_val = motor_vel / motor_max * 255
-    motor(motor_no, motor_vel)	
+    self.motor(motor_no, motor_vel)	
 
 class i2c_motor_driver:
 
@@ -163,8 +163,7 @@ class i2c_motor_driver:
      @param values: array of bytes to write to motor controller
   '''
   def write_values(self, values):
-    for value in values:
-      self.write(value)
+    self.bus.write_i2c_block_data(self.i2c_address, 0x00, values)
 
   '''function init_controller:
   '''  
@@ -173,7 +172,7 @@ class i2c_motor_driver:
       self.logger.warning("can only drive up to 4 motors")
       return 0
     command_byte = module_init_command
-    write_values([command_byte, pid, enc_reset, motors])
+    self.write_values([command_byte, pid, enc_reset, motors])
     return 1
   '''function send_motor_command: given a motor number and motor velocity, 
      sends an appropriate command to the motor controller over i2c

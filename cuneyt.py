@@ -46,7 +46,7 @@ class cuneyt:
         self.logger = logger.logger()
 	self.resources = resources.resources()
 	
-	self.motors = m_con(d, motor_setup, motor_driver, self.logger)
+	self.motors = m_con(self.logger, d, motor_setup, motor_driver)
         
 	#create lidar object
         #self.lidar = lidar.lidar(self.pwm, logger)
