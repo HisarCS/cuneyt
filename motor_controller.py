@@ -39,12 +39,18 @@ class motor_controller:
     #TODO: fix wiringpi
     #    wiringpi.wiringPiSetup()
     #    wiringpi.pinMode(1, 2)
-
+  ''''function move: moves the robot with the given speed, rotation and angle
+      note that angle is not a valid parameter for differential drive and thus
+      will not affect the behavior of the robot
+      @param speed: linear velocity of the robot in m/s (-2 to 2 m/s)
+      @param rotation: angular velocity of the robot in rad/s
+      @return: motor values array
+  '''
   def move(self, speed, rotation, angle=0):
     motors = self.controller.move(speed,rotation,angle)
     for i in range(len(motors)):
-      print motors[i]
       self.driver.send_motor_command(i,motors[i])
+    return motors
 
   def turn(self, speed):
     self.driver.turn(speed)
