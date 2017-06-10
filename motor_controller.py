@@ -40,12 +40,10 @@ class motor_controller:
     #    wiringpi.wiringPiSetup()
     #    wiringpi.pinMode(1, 2)
 
-  def move(self, speed, rotation, angle):
-    if self.motor_controller == mecanum or self.motor_controller == omni:
-      motors = self.controller.move(angle, speed, rotation)
-    elif self.motor_controller == differential:
-      motors = self.controller.move(angle, speed)
-    for i in range(motors):
+  def move(self, speed, rotation, angle=0):
+    motors = self.controller.move(speed,rotation,angle)
+    for i in range(len(motors)):
+      print motors[i]
       self.driver.send_motor_command(i,motors[i])
 
   def turn(self, speed):
@@ -64,7 +62,8 @@ class motor_controller:
     if pos > 255:
       self.logger.warning("servo value too large")
       return 0
-    wiringpi.pwmWrite(1,pos)    
+    #TODO: fix wiringpi
+    #wiringpi.pwmWrite(1,pos)    
     return 1
 
   def send_servo_command(self, pin, pos):

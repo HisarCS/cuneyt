@@ -12,6 +12,16 @@ import subprocess
 import tweepy
 import config
 
+print """
+	Welcome to Cuneyt
+	to init using the default configuration just run: cuneyt()
+	otherwise:
+	motor_setups: mecanum->0, differential->1, omni->2
+	motor_drivers: i2c->0, adafruit->1
+	usage: c = cuneyt(motor_setup=1, motor_driver=0)
+	NOT: @canparlar @emirerdogdu, siz c = cuneyt() diceksiniz
+
+"""
 ''' class cuneyt:
     The class where all the components of Cuneyt, the robot, are put together
     includes the most basic functionality of Cuneyt

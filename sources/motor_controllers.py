@@ -10,7 +10,8 @@ class mecanum:
       limited at -+255, higher sums will be mapped accordingly to avoid
       conflicts with the motor_controller library
   '''
-  def move(self, s_translate, s_rotate, dir_translate):
+  #params: speed, rotation, angle from motor_controller.py
+  def move(self, speed_translate, s_rotate, dir_translate):
     '''
        trig calculations to go in set direction
     '''
@@ -40,12 +41,14 @@ class mecanum:
 
 class differential:
   def __init__(self, d):
-    self.d = d
+    #cast c to meters from centimeters
+    self.d = d/100.0
 
-  def move(self, V, W):
+  def move(self, V, W,non=0):
     vl = V - (W*self.d / 2)
     vr = V + (W*self.d / 2)
-    return (vl,vr)
-
+    print "vr: "+str(vr)+", vl: "+str(vl)
+    return [vl,vr]
+    
   def turn(self, W):
     return self.move(0, W)

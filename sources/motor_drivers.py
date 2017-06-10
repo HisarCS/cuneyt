@@ -191,10 +191,10 @@ class i2c_motor_driver:
     else:
       #round velocity into one unsigned byte w ~9mm/s precision)
       #can increase precision in the future if >1cm/s needed
-      motor_vel_byte = int(round(abs(motor_vel)*255.0/2.0))
+      motor_vel_byte = abs(int(round(motor_vel*128/2.0)))
       #command byte is 0x02 for motor_write
       command_byte = motor_write_command
-      self.write_values([command_byte, motor_no, motor_vel_byte])
+      self.write_values([command_byte,motor_no,motor_vel_byte,(motor_vel > 0)])
       return 1
 
   '''function send_servo_command: given a servo number and servo position,
