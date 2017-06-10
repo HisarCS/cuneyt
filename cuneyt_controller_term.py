@@ -8,16 +8,23 @@ W = 0
 while True:
 
   key = raw_input()
+  if key == 'exit':
+    c.motors.move(0,0)
+    break
   if key == 'q':
     V = 0
+    W = 0
+  if key == 'o':
+    V = 0
+  elif key == 'p':
     W = 0
   for k in key:
     if k == 'i':
       V += 0.1
     elif k == 'k':
       V -= 0.1
-    elif k == 'l':
-      W += 0.1
     elif k == 'j':
-      W -= 0.1
-  c.motors.move(V,W)
+      W += 0.4
+    elif k == 'l':
+      W -= 0.4
+  c.motors.move(V,W-.25)
