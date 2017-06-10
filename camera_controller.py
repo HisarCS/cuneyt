@@ -28,10 +28,10 @@ class camera_controller:
         self.pwm = pwm
         
 	#setup servo pin and initial servo angle
-	self.servo_pin = pins.camera_servo
-	self.pwm.set_pwm(self.servo_pin, 0, 1175)
-	self.servo_process = None
-	self.servo_value = 1175
+        self.servo_pin = pins.camera_servo
+        self.pwm.set_pwm(self.servo_pin, 0, 1175)
+        self.servo_process = None
+        self.servo_value = 1175
 	
         #add error logger as a field
         self.logger = logger
@@ -50,14 +50,14 @@ class camera_controller:
         is theta * 3 + 160
     '''
     def look_at(self,angle):
-	if(angle < 30):
-	    return False
+        if(angle < 30):
+            return False
 	
-	val = (angle-90) % 180
-	servo_val = 500 + angle * 1350/180
-	self.pwm.set_pwm(self.servo_pin,0,servo_val)
-	self.servo_value = servo_val
-	return True
+        val = (angle-90) % 180
+        servo_val = 500 + angle * 1350/180
+        self.pwm.set_pwm(self.servo_pin,0,servo_val)
+        self.servo_value = servo_val
+        return True
 
     ''' function take_picture:
         wrapper for camera.capture, saves image with the given name
@@ -151,8 +151,8 @@ class camera_controller:
                 self.previewing = False
                 return True
             except PiCameraError as err:
-		self.logger.warning("Camera error: " + err)
-		return False
+                self.logger.warning("Camera error: " + err)
+                return False
    
     ''' function start_camera_stream:
         starts a camera stream, as a background process

@@ -2,3 +2,4 @@ pymongo
 pyglet
 Adafruit_PCA9685
 tweepy
+wiringpi

@@ -25,11 +25,11 @@ class logger:
             self.connected = False
             self.backlog_index = 0
             self.backlog_process = Process(target = self.backlog)
-        except Exception,e:
+        except Exception as e:
             self.log.warning("could not initialize mongo: "+repr(e))
     
     def cache(self, tp, data, t):
-	return None
+        return None
 	#TODO: implement proper csv cache
 #        with open(config.backlog_file, 'a') as backlog_file:
 #            backlog_file.write([tp, data, t])

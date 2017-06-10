@@ -47,7 +47,6 @@ class differential:
   def move(self, V, W,non=0):
     vl = V - (W*self.d / 2)
     vr = V + (W*self.d / 2)
-    print "vr: "+str(vr)+", vl: "+str(vl)
     return [vl,vr]
     
   def turn(self, W):

@@ -12,7 +12,7 @@ import subprocess
 import tweepy
 import config
 
-print """
+print("""
 	Welcome to Cuneyt
 	to init using the default configuration just run: cuneyt()
 	otherwise:
@@ -21,7 +21,7 @@ print """
 	usage: c = cuneyt(motor_setup=1, motor_driver=0)
 	NOT: @canparlar @emirerdogdu, siz c = cuneyt() diceksiniz
 
-"""
+      """)
 ''' class cuneyt:
     The class where all the components of Cuneyt, the robot, are put together
     includes the most basic functionality of Cuneyt
@@ -54,9 +54,9 @@ class cuneyt:
                        motor_setup = motor_controller.mecanum):
         #set logger field and setup logger
         self.logger = logger.logger()
-	self.resources = resources.resources()
+        self.resources = resources.resources()
 	
-	self.motors = m_con(self.logger, d, motor_setup, motor_driver)
+        self.motors = m_con(self.logger, d, motor_setup, motor_driver)
         
 	#create lidar object
         #self.lidar = lidar.lidar(self.pwm, logger)
@@ -66,22 +66,22 @@ class cuneyt:
         try:
             self.camera = camera_controller.camera_controller(self.pwm, False, 
         							  self.logger)
-        except Exception,e:
+        except Exception as e:
             self.logger.warning("camera init error: "+repr(e))
 	#the following are NOT essential, so we can ignore errors if any occur
-	try:
+        try:
             auth = tweepy.OAuthHandler(config.twitter_consumer_key, 
                                        config.twitter_consumer_secret)
             auth.set_access_token(config.twitter_access_token, 
                                   config.twitter_access_secret)
             self.twitter = tweepy.API(auth)
-        except Exception,e:
+        except Exception as e:
             self.logger.warning("failed to initiate tweepy: "+repr(e))
        # self.lidar_process = Process(target = self.lidar.sweep)
        # self.lidar_running = False
  
     def close(self):
-	self.m_con.cleanup()
+        self.m_con.cleanup()
     '''
         runs the update script
     '''
