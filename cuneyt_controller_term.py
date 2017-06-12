@@ -6,8 +6,11 @@ c = cuneyt(motor_setup=1,motor_driver=0)
 V = 0
 W = 0
 while True:
-
-  key = raw_input()
+  try:
+    key = raw_input()
+  except Exception as e:
+    key = input()
+  
   if key == 'exit':
     c.motors.move(0,0)
     break
